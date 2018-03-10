@@ -9,10 +9,10 @@
 import Foundation
 import UIKit
 
-//structの意味ある？？？
+//struct？？
 struct Sizing {
     
-    var size: (Int, Int) = (0,0)
+    private var size: (Int, Int) = (0,0)
     
     //mapViewのサイズを決定する
     mutating func mapViewSize(screenHeight: Int) -> (y: Int, height: Int){
@@ -49,8 +49,7 @@ struct Sizing {
     }
 }
 
-//ボタン、ラベルの位置を決定するためのもの
-//classの意味ある？enumとか、、、？？
+//もっと良い表現はないものか。。。
 class ScreenSize {
     
     let height: CGFloat = UIScreen.main.bounds.height
@@ -64,10 +63,7 @@ class ScreenSize {
     let bottomLabel_y = 72
     //ラベルの高さ
     let labelHeight = 50
-    //ボタンのy座標
-    //var button_y: Int?
     //ヘッダー
     let header = 20
-    
     
 }

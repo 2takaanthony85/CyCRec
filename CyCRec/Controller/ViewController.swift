@@ -16,18 +16,15 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         super.viewDidLoad()
         
         //print(UIFont.familyNames)
-        
         //print(UIFont.fontNames(forFamilyName: "Font Awesome 5 Free"))
         //print(UIFont.fontNames(forFamilyName: "Font Awesome 5 Brands"))
-        
-        //label.font = UIFont(name: "FontAwesome5FreeSolid", size: 100)
-        //label.text = "bicycle"
         
         let cycleBarButton = UIBarButtonItem(customView: self.createButton())
         self.navigationItem.rightBarButtonItem = cycleBarButton
         
     }
     
+    //ナビゲーションボタンの生成
     func createButton() -> UIButton {
         let button = UIButton(type: .system)
         
@@ -44,6 +41,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         return button
     }
     
+    //ボタン押下で画面遷移
     @objc func play() {
         print("tapped")
         
