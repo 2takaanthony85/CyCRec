@@ -16,7 +16,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         super.viewDidLoad()
         
         //print(UIFont.familyNames)
-        
         //print(UIFont.fontNames(forFamilyName: "Font Awesome 5 Free"))
         //print(UIFont.fontNames(forFamilyName: "Font Awesome 5 Brands"))
         
