@@ -18,6 +18,11 @@ class PlayView: UIView {
     //startButtonとpauseButtonの切り替えに使用するフラグ
     var buttonStatus: Bool
     
+    let timeLabel: UILabel
+    let distanceLabel: UILabel
+    let realtimeSpeedlabel: UILabel
+    let averageSpeedLabel: UILabel
+    
     //スタート
     private lazy var startButton: UIButton = {
         let startButton = UIButton()
@@ -63,18 +68,55 @@ class PlayView: UIView {
     override init(frame: CGRect) {
         
         self.mapView = MKMapView(frame: CGRect(origin: .zero, size: frame.size))
+        
+        self.timeLabel = UILabel(frame: CGRect(x: screenSize.leftLabel_x, y: screenSize.topLabel_y, width: Int((screenSize.width - 6.0) / 2), height: screenSize.labelHeight))
+        self.distanceLabel = UILabel(frame: CGRect(x: screenSize.leftLabel_x, y: screenSize.bottomLabel_y, width: Int((screenSize.width - 6.0) / 2), height: screenSize.labelHeight))
+        self.realtimeSpeedlabel = UILabel(frame: CGRect(x: Int(screenSize.width / 2 + 1), y: screenSize.topLabel_y, width: Int((screenSize.width - 6.0) / 2), height: screenSize.labelHeight))
+        self.averageSpeedLabel = UILabel(frame: CGRect(x: Int(screenSize.width / 2 + 1), y: screenSize.bottomLabel_y, width: Int((screenSize.width - 6.0) / 2), height: screenSize.labelHeight))
+        
         buttonStatus = true
         
         super.init(frame: frame)
         
-        self.addSubview(self.mapView)
-        self.addSubview(self.startButton)
-        self.addSubview(self.stopButton)
-        self.addSubview(self.closeButton)
+        labelBackColorDesign()
+        labelTextDesign()
+        addComponent()
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func labelBackColorDesign() {
+        timeLabel.backgroundColor = UIColor.white
+        distanceLabel.backgroundColor = UIColor.white
+        realtimeSpeedlabel.backgroundColor = UIColor.white
+        averageSpeedLabel.backgroundColor = UIColor.white
+    }
+    
+    private func labelTextDesign() {
+        timeLabel.text = "00:00:00"
+        timeLabel.textAlignment = .right
+        
+        distanceLabel.text = "0.00 km"
+        distanceLabel.textAlignment = .right
+        
+        realtimeSpeedlabel.text = "000.00 km/h"
+        realtimeSpeedlabel.textAlignment = .right
+        
+        averageSpeedLabel.text = "000.00 km/h"
+        averageSpeedLabel.textAlignment = .right
+    }
+    
+    private func addComponent() {
+        self.addSubview(self.mapView)
+        self.addSubview(self.timeLabel)
+        self.addSubview(self.distanceLabel)
+        self.addSubview(self.realtimeSpeedlabel)
+        self.addSubview(self.averageSpeedLabel)
+        self.addSubview(self.startButton)
+        self.addSubview(self.stopButton)
+        self.addSubview(self.closeButton)
     }
 
     //取得した位置情報を地図にピンとして貼り付ける

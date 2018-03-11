@@ -9,8 +9,6 @@
 import UIKit
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,7 +42,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     //ボタン押下で画面遷移
     @objc func play() {
         print("tapped")
-        
         let playVC = PlayViewController()
         self.present(playVC, animated: true, completion: nil)
     }
@@ -59,6 +56,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         cell.textLabel?.text = "sample"
         return cell
     }
+    
     
 
 
