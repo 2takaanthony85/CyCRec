@@ -60,7 +60,19 @@ class PlayViewController: UIViewController,CLLocationManagerDelegate {
         //pauseButtonに切り替え
         playView.switchButton()
         
+        NotificationCenter.default.addObserver(self, selector: #selector(updateTimeLabel(_:)), name: NSNotification.Name(rawValue: "updateTime"), object: nil)
+        
         print("touched start")
+    }
+    
+    //時間の表示
+    @objc func updateTimeLabel(_ notification: Notification) {
+        guard let userInfo = notification.userInfo else {
+            return
+        }
+        if let timeText = userInfo["time"] as? String {
+            playView.timeLabel.text = timeText
+        }
     }
     
     //承認ステータスの変更を通知
@@ -124,7 +136,7 @@ class PlayViewController: UIViewController,CLLocationManagerDelegate {
     func stringData() {
         playView.realtimeSpeedlabel.text = String(format: "%.2f km/h", measureSpeed.realTimeSpeed)
         playView.averageSpeedLabel.text = String(format: "%.2f km/h", measureSpeed.average)
-        //playView.distanceLabel.text = String(format: "%.2f km", measureDistance.totalDistance)
+        playView.distanceLabel.text = String(format: "%.2f km", measureDistance.totalDistance)
     }
 //
 //    @objc func stop() {

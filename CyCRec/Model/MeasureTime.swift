@@ -76,5 +76,7 @@ class MeasureTimer {
         count += 1
         //表示時のフォーマットの定義
         timeText = String(format:"%02d:%02d:%02d", hor, min, sec)
+        
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateTime"), object: nil, userInfo: ["time": timeText])
     }
 }
