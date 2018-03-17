@@ -15,7 +15,7 @@ class PlayViewController: UIViewController,CLLocationManagerDelegate {
     
 //    let alertTitle = "close?"
 //    let alertMessage = "記録を終了してしていいですか？（記録は保存されません）"
-//    
+ 
 //    //地図
 //    private lazy var mapView: MKMapView = {
 //        let mapView = MKMapView()
@@ -23,52 +23,7 @@ class PlayViewController: UIViewController,CLLocationManagerDelegate {
 //        mapView.frame = CGRect(x: 0, y: mapSize.y, width: Int(screenSize.width), height: mapSize.height)
 //        return mapView
 //    }()
-//    
-//    //時間
-//    private lazy var timeLabel: UILabel = {
-//        let timeLabel = UILabel()
-//        timeLabel.frame = CGRect(x: screenSize.leftLabel_x, y: screenSize.topLabel_y, width: Int(screenSize.width - 6.0), height: screenSize.labelHeight)
-//        timeLabel.backgroundColor = UIColor.white
-//        //課題：textが表示されない
-//        timeLabel.text = "10:30:40"
-//        timeLabel.textAlignment = .right
-//        return timeLabel
-//    }()
-//    
-//    //距離
-//    private lazy var distanceLabel: UILabel = {
-//        let distanceLabel = UILabel()
-//        distanceLabel.frame = CGRect(x: screenSize.leftLabel_x, y: screenSize.bottomLabel_y, width: Int((screenSize.width - 6.0) / 2), height: screenSize.labelHeight)
-//        distanceLabel.backgroundColor = UIColor.white
-//        distanceLabel.text = "123.45 km"
-//        distanceLabel.textColor = UIColor.black
-//        distanceLabel.textAlignment = .right
-//        return distanceLabel
-//    }()
-//    
-//    //最高時速
-//    private lazy var maxSpeedlabel: UILabel = {
-//        let maxSpeedLabel = UILabel()
-//        maxSpeedLabel.frame = CGRect(x: Int(screenSize.width / 2 + 1), y: screenSize.topLabel_y, width: Int((screenSize.width - 6.0) / 2), height: screenSize.labelHeight)
-//        maxSpeedLabel.backgroundColor = UIColor.white
-//        maxSpeedLabel.text = "567.98 km/h"
-//        maxSpeedLabel.textColor = UIColor.black
-//        maxSpeedLabel.textAlignment = .right
-//        return maxSpeedLabel
-//    }()
-//    
-//    //平均時速
-//    private lazy var averageSpeedLabel: UILabel = {
-//        let averageSpeedLabel = UILabel()
-//        averageSpeedLabel.frame = CGRect(x: Int(screenSize.width / 2 + 1), y: screenSize.bottomLabel_y, width: Int((screenSize.width - 6.0) / 2), height: screenSize.labelHeight)
-//        averageSpeedLabel.backgroundColor = UIColor.white
-//        averageSpeedLabel.text = "678.56 km/h"
-//        averageSpeedLabel.textColor = UIColor.black
-//        averageSpeedLabel.textAlignment = .right
-//        return averageSpeedLabel
-//    }()
-//
-
+    
     var playView: PlayView!
     var myLocationManager: CLLocationManager!
     var measureSpeed = MeasureSpeed()
@@ -82,8 +37,8 @@ class PlayViewController: UIViewController,CLLocationManagerDelegate {
         locationConfig(myLocationManager)
         
         playView = PlayView(frame: CGRect(origin: .zero, size: self.view.frame.size))
+        
         self.view.addSubview(playView)
-
     }
     
     //CLLocationManagerの設定
@@ -94,7 +49,6 @@ class PlayViewController: UIViewController,CLLocationManagerDelegate {
     }
     
     @objc func tappedStart() {
-
         //位置情報取得開始
         myLocationManager.startUpdatingLocation()
         //タップ時(スタート時)の位置情報を取得し、ピンを貼る
@@ -106,7 +60,19 @@ class PlayViewController: UIViewController,CLLocationManagerDelegate {
         //pauseButtonに切り替え
         playView.switchButton()
         
+        NotificationCenter.default.addObserver(self, selector: #selector(updateTimeLabel(_:)), name: NSNotification.Name(rawValue: "updateTime"), object: nil)
+        
         print("touched start")
+    }
+    
+    //時間の表示
+    @objc func updateTimeLabel(_ notification: Notification) {
+        guard let userInfo = notification.userInfo else {
+            return
+        }
+        if let timeText = userInfo["time"] as? String {
+            playView.timeLabel.text = timeText
+        }
     }
     
     //承認ステータスの変更を通知
@@ -141,10 +107,10 @@ class PlayViewController: UIViewController,CLLocationManagerDelegate {
         
         //2種類の時速を計測
         measureSpeed.realTimeSpeed(location: newLocation)
-        
         //距離の計測
         measureDistance.locations.append(newLocation)
         
+        stringData()
     }
     
     //位置情報の取得に失敗した時の場合
@@ -165,6 +131,12 @@ class PlayViewController: UIViewController,CLLocationManagerDelegate {
         //startButtonに切り替え
         playView.switchButton()
         print("touched pause")
+    }
+    
+    func stringData() {
+        playView.realtimeSpeedlabel.text = String(format: "%.2f km/h", measureSpeed.realTimeSpeed)
+        playView.averageSpeedLabel.text = String(format: "%.2f km/h", measureSpeed.average)
+        playView.distanceLabel.text = String(format: "%.2f km", measureDistance.totalDistance)
     }
 //
 //    @objc func stop() {
