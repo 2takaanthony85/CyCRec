@@ -41,7 +41,6 @@ class PlayView: UIView, MKMapViewDelegate {
         var buttonSize = sizing.mapViewSize(screenHeight: Int(screenSize.height))
         stopButton.frame = CGRect(x: Int(screenSize.width / 2), y: Int(buttonSize.height + screenSize.header), width: Int(screenSize.width / 2), height: screenSize.labelHeight)
         stopButton.backgroundColor = UIColor.MainColor()
-        //stopButton.addTarget(PlayViewController(), action: #selector(PlayViewController.stop), for: .touchUpInside)
         stopButton.addTarget(CycleViewController(), action: #selector(CycleViewController.stop), for: .touchUpInside)
         return stopButton
     }()
@@ -52,7 +51,6 @@ class PlayView: UIView, MKMapViewDelegate {
         var buttonSize = sizing.mapViewSize(screenHeight: Int(screenSize.height))
         pauseButton.frame = CGRect(x: 0, y: Int(buttonSize.height + screenSize.header), width: Int(screenSize.width / 2), height: screenSize.labelHeight)
         pauseButton.backgroundColor = UIColor.orange
-        //pauseButton.addTarget(PlayViewController(), action: #selector(PlayViewController.pause), for: .touchUpInside)
         pauseButton.addTarget(CycleViewController(), action: #selector(CycleViewController.pause), for: .touchUpInside)
         return pauseButton
     }()
@@ -65,7 +63,6 @@ class PlayView: UIView, MKMapViewDelegate {
         closeButton.backgroundColor = UIColor.white
         closeButton.setTitle("close", for: .normal)
         closeButton.setTitleColor(UIColor.blue, for: .normal)
-        //closeButton.addTarget(self, action: #selector(close), for: .touchUpInside)
         closeButton.addTarget(CycleViewController(), action: #selector(CycleViewController.close), for: .touchUpInside)
         return closeButton
     }()
@@ -187,7 +184,6 @@ class PlayView: UIView, MKMapViewDelegate {
     //軌跡を地図上にレンダリング
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         let polyLineRenderer = MKPolylineRenderer(polyline: overlay as! MKPolyline)
-        //let polyLineRenderer = MKPolylineRenderer(overlay: overlay)
         polyLineRenderer.strokeColor = UIColor.MainColor()
         polyLineRenderer.alpha = 0.5
         polyLineRenderer.lineWidth = 3.0

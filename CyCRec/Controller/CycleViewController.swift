@@ -93,35 +93,49 @@ class CycleViewController: UIViewController, CLLocationManagerDelegate, AlertDel
     
     //stop
     @objc func stop() {
-        stopOperation()
         let operation = Operation.stop
+        stopOperation()
         alertByOperation(operation)
     }
     
     //一時停止
     @objc func pause() {
-        stopOperation()
+        pauseOperation()
     }
     
     //閉じる
     @objc func close() {
-        stopOperation()
         let operation = Operation.close
         alertByOperation(operation)
     }
     
-    //stop, pause, closeが押されたときに
-    //タップ時点の位置情報を取得して追加 → 距離を計測
+    //pauseが押されたときに
     //タイマーの停止
     //locationServiceの停止
     //ボタンの切り替え
-    func stopOperation() {
-        if let newLocation = locationService.locationManager.location {
-            measureDistance.locations.append(newLocation)
-        }
+    func pauseOperation() {
         measureTimer.stopTimer()
         locationService.locationManager.stopUpdatingLocation()
+        //startButtonに切り替え
         playView.switchButton()
+    }
+    
+    //stop, closeがタップされたとき
+    func stopOperation() {
+        //pauseButtonがタップされている場合
+        //startButtonが表示されている(statusはtrue)
+        //タイマー、locationServiceは停止している
+        if playView.buttonStatus {
+            //何もしない
+        } else {
+            //pauseButtonがタップされていない
+            //pauseButtonが表示されている
+            //タイマー、locationServiceは動いている
+            measureTimer.stopTimer()
+            locationService.locationManager.stopUpdatingLocation()
+            //pauseButtonからstartButtonに切り替える
+            playView.switchButton()
+        }
     }
     
     //AlertDelegate
@@ -131,6 +145,7 @@ class CycleViewController: UIViewController, CLLocationManagerDelegate, AlertDel
             self.dismiss(animated: true, completion: nil)
         case .stop:
             print("stop")
+            //保存の処理
         }
     }
     
@@ -147,8 +162,4 @@ class CycleViewController: UIViewController, CLLocationManagerDelegate, AlertDel
         // Dispose of any resources that can be recreated.
     }
     
-
-    
-
-
 }

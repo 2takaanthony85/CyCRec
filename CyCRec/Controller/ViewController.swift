@@ -42,8 +42,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     //ボタン押下で画面遷移
     @objc func play() {
         print("tapped")
-        //let playVC = PlayViewController()
-        //self.present(playVC, animated: true, completion: nil)
         let CycleVC = CycleViewController()
         self.present(CycleVC, animated: true, completion: nil)
     }

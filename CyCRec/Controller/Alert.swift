@@ -36,8 +36,8 @@ struct Alert {
         let okAction = UIAlertAction(title: "OK", style: .default) { (action) in
             self.delegate?.ok(operation)
         }
-        alertContoroller.addAction(okAction)
         let cancel = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+        alertContoroller.addAction(okAction)
         alertContoroller.addAction(cancel)
     }
     
