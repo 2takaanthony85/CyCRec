@@ -10,7 +10,13 @@ import UIKit
 import MapKit
 import CoreLocation
 
-class CycleViewController: UIViewController, CLLocationManagerDelegate {
+enum Operation {
+    case stop
+    //case pause
+    case close
+}
+
+class CycleViewController: UIViewController, CLLocationManagerDelegate, AlertDelegate {
 
     var playView: PlayView!
     let locationService = LocationService()
@@ -85,21 +91,64 @@ class CycleViewController: UIViewController, CLLocationManagerDelegate {
         playView.distanceLabel.text = String(format: "%.2f km", distance)
     }
     
-
+    //stop
+    @objc func stop() {
+        stopOperation()
+        let operation = Operation.stop
+        alertByOperation(operation)
+    }
+    
+    //一時停止
+    @objc func pause() {
+        stopOperation()
+    }
+    
+    //閉じる
+    @objc func close() {
+        stopOperation()
+        let operation = Operation.close
+        alertByOperation(operation)
+    }
+    
+    //stop, pause, closeが押されたときに
+    //タップ時点の位置情報を取得して追加 → 距離を計測
+    //タイマーの停止
+    //locationServiceの停止
+    //ボタンの切り替え
+    func stopOperation() {
+        if let newLocation = locationService.locationManager.location {
+            measureDistance.locations.append(newLocation)
+        }
+        measureTimer.stopTimer()
+        locationService.locationManager.stopUpdatingLocation()
+        playView.switchButton()
+    }
+    
+    //AlertDelegate
+    func ok(_ operation: Operation) {
+        switch operation {
+        case .close:
+            self.dismiss(animated: true, completion: nil)
+        case .stop:
+            print("stop")
+        }
+    }
+    
+    //Alert
+    func alertByOperation(_ operation: Operation) {
+        var alert = Alert.init(pattern: operation)
+        alert.delegate = self
+        alert.ShowAction(operation)
+        present(alert.alertContoroller, animated: true, completion: nil)
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
 
-    /*
-    // MARK: - Navigation
+    
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
