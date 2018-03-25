@@ -40,6 +40,5 @@ struct Alert {
         alertContoroller.addAction(okAction)
         alertContoroller.addAction(cancel)
     }
-    
-
 }
+

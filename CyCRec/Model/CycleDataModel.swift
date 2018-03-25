@@ -8,7 +8,14 @@
 
 import Foundation
 
-//struct CycleData {
-//
-//}
+struct CycleData {
+    
+    let count: Int
+    let timeScore: String
+    let distance: Double
+    let maxSpeed: Double
+    let averageSpeed: Double
+    let date: () -> String
+    
+}
 

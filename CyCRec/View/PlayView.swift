@@ -85,6 +85,9 @@ class PlayView: UIView, MKMapViewDelegate {
         labelBackColorDesign()
         labelTextDesign()
         addComponent()
+        
+        //スタートする前はstopButtonは使用できない
+        self.stopButton.isEnabled = false
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -184,9 +187,9 @@ class PlayView: UIView, MKMapViewDelegate {
     //軌跡を地図上にレンダリング
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         let polyLineRenderer = MKPolylineRenderer(polyline: overlay as! MKPolyline)
-        polyLineRenderer.strokeColor = UIColor.MainColor()
+        polyLineRenderer.strokeColor = UIColor.red
         polyLineRenderer.alpha = 0.5
-        polyLineRenderer.lineWidth = 3.0
+        polyLineRenderer.lineWidth = 5.0
         return polyLineRenderer
     }
     
@@ -200,6 +203,10 @@ class PlayView: UIView, MKMapViewDelegate {
             self.addSubview(startButton)
             self.buttonStatus = true
         }
+    }
+    
+    func useEnabledStopButton() {
+        self.stopButton.isEnabled = true
     }
 
 }

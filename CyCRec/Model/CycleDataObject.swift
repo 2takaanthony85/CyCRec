@@ -10,17 +10,37 @@ import Foundation
 import RealmSwift
 
 class CycleDataObject: Object {
+    static let realm = try! Realm()
+    
     @objc dynamic var CycleID: Int = 0
     //タイマーで使用していたcount
     @objc dynamic var count: Int = 0
     //00:00:00
     @objc dynamic var timeScore: String = ""
-    //距離
+    //走行距離
     @objc dynamic var distance: Double = 0
     //最高時速
     @objc dynamic var maxSpeed: Double = 0
     //平均時速
     @objc dynamic var averageSpeed: Double = 0
     //走行日
-    @objc dynamic var date: NSDate = NSDate()
+    @objc dynamic var date: String = ""
+    
+    override static func primaryKey() -> String? {
+        return "CycleID"
+    }
+    
+    static func create() -> CycleDataObject {
+        let object = CycleDataObject()
+        object.CycleID = lastID()
+        return object
+    }
+    
+    static func lastID() -> Int {
+        if let object = realm.objects(CycleDataObject.self).last {
+            return object.CycleID + 1
+        } else {
+            return 1
+        }
+    }
 }

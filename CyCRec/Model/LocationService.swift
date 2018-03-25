@@ -126,7 +126,7 @@ class LocationService: NSObject, CLLocationManagerDelegate {
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "didUpdateLocation"), object: nil, userInfo: ["location": newLocation])
     }
     
-    //
+    //closure
     func coordinate2DArrayAppend(locations: [CLLocation], updateFunc: ([CLLocationCoordinate2D]) -> Void) {
         var coordinateArray = [CLLocationCoordinate2D]()
         for location in locations {

@@ -52,6 +52,7 @@ class CycleViewController: UIViewController, CLLocationManagerDelegate, AlertDel
         NotificationCenter.default.addObserver(self, selector: #selector(updateData(_:)), name: NSNotification.Name(rawValue: "didUpdateLocation"), object: nil)
         
         playView.switchButton()
+        playView.useEnabledStopButton()
     }
     
     //時間の表示
@@ -144,8 +145,10 @@ class CycleViewController: UIViewController, CLLocationManagerDelegate, AlertDel
         case .close:
             self.dismiss(animated: true, completion: nil)
         case .stop:
-            print("stop")
             //保存の処理
+            let realmAccess = realmDataAccess()
+            realmAccess.saveData(timer: self.measureTimer, distance: self.measureDistance, speed: self.measureSpeed)
+            self.dismiss(animated: true, completion: nil)
         }
     }
     
