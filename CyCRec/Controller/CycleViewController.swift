@@ -85,6 +85,7 @@ class CycleViewController: UIViewController, CLLocationManagerDelegate, AlertDel
         }
     }
     
+    //DispatchQueue使いたい。。。使える場面なのではないか？
     //速度、距離のデータの更新
     func updateDataDisplay(_ speed: Double, _ average: Double, _ distance: Double) {
         playView.realtimeSpeedlabel.text = String(format: "%.2f km/h", speed)

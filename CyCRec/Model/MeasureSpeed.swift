@@ -32,14 +32,14 @@ struct MeasureSpeed {
     //最高時速
     var maxSpeed: Double {
         get {
-//            var first = speedBox[0]
-//            for speed in speedBox {
-//                if first < speed {
-//                    first = speed
-//                }
-//            }
-//            return first
-            return 56.90
+            //配列に何も入ってないと落ちる
+            var first = speedBox[0]
+            for speed in speedBox {
+                if first < speed {
+                    first = speed
+                }
+            }
+            return first
         }
     }
     
