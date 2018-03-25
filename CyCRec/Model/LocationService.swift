@@ -12,6 +12,7 @@ import CoreLocation
 class LocationService: NSObject, CLLocationManagerDelegate {
     
     let locationManager: CLLocationManager
+    //フィルターをかけて取得した位置情報
     var locationDataArray: [CLLocation]
     var userFilter: Bool
     
@@ -26,8 +27,10 @@ class LocationService: NSObject, CLLocationManagerDelegate {
         locationManager.distanceFilter = 5
         
         //バックグラウンド時でも位置情報取得を可能にする
-        locationManager.allowsBackgroundLocationUpdates = true
-        locationManager.pausesLocationUpdatesAutomatically = false
+        //locationManager.allowsBackgroundLocationUpdates = true
+        //locationManager.pausesLocationUpdatesAutomatically = false
+        //locationManager.pausesLocationUpdatesAutomatically = true
+        //locationManager.activityType = .fitness
         
         locationDataArray = []
         userFilter = true
@@ -45,9 +48,18 @@ class LocationService: NSObject, CLLocationManagerDelegate {
             if status == CLAuthorizationStatus.notDetermined {
                 //フォアグラウンドからの起動を許可
                 locationManager.requestWhenInUseAuthorization()
+                //バックグラウンド時でも位置情報取得を可能にする
+                //capabilitiesのbackground modeをonにして
+                //location updateにチェックを入れないとエラーで落ちる
+                locationManager.allowsBackgroundLocationUpdates = true
+                //
+                locationManager.pausesLocationUpdatesAutomatically = true
+                locationManager.activityType = .fitness
             }
             else if status == CLAuthorizationStatus.authorizedWhenInUse {
-                //何もしない
+                locationManager.allowsBackgroundLocationUpdates = true
+                locationManager.pausesLocationUpdatesAutomatically = true
+                locationManager.activityType = .fitness
             }
         }
         else{
@@ -66,15 +78,61 @@ class LocationService: NSObject, CLLocationManagerDelegate {
         guard let newLocation = locations.last else {
             return
         }
-        print(newLocation.coordinate.latitude)
-        print(newLocation.coordinate.longitude)
+        //指定された座標値が有効かどうか判定
+        if !CLLocationCoordinate2DIsValid(newLocation.coordinate) {
+            return
+        }
         
+        var locationAdded: Bool
+        if userFilter {
+            locationAdded = filterLocation(newLocation)
+        }
+        else {
+            locationDataArray.append(newLocation)
+            locationAdded = true
+        }
+        
+        if locationAdded {
+            updateNewLocation(newLocation: newLocation)
+        }
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print("error")
     }
     
+    //取得した位置情報をフィルターにかける
+    func filterLocation(_ location: CLLocation) -> Bool {
+        let age = -location.timestamp.timeIntervalSinceNow
+        
+        if age > 10 {
+            return false
+        }
+        
+        if location.horizontalAccuracy < 0 {
+            return false
+        }
+        
+        if location.horizontalAccuracy > 100 {
+            return false
+        }
+        
+        locationDataArray.append(location)
+        
+        return true
+    }
     
+    func updateNewLocation(newLocation: CLLocation) {
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "didUpdateLocation"), object: nil, userInfo: ["location": newLocation])
+    }
+    
+    //closure
+    func coordinate2DArrayAppend(locations: [CLLocation], updateFunc: ([CLLocationCoordinate2D]) -> Void) {
+        var coordinateArray = [CLLocationCoordinate2D]()
+        for location in locations {
+            coordinateArray.append(location.coordinate)
+        }
+        updateFunc(coordinateArray)
+    }
     
 }

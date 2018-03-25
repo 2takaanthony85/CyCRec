@@ -9,7 +9,7 @@
 import UIKit
 import MapKit
 
-class PlayView: UIView {
+class PlayView: UIView, MKMapViewDelegate {
     
     let mapView: MKMapView
     
@@ -23,13 +23,15 @@ class PlayView: UIView {
     let realtimeSpeedlabel: UILabel
     let averageSpeedLabel: UILabel
     
+    var polyLine: MKPolyline?
+    
     //スタート
     private lazy var startButton: UIButton = {
         let startButton = UIButton()
         var buttonSize = sizing.mapViewSize(screenHeight: Int(screenSize.height))
         startButton.frame = CGRect(x: 0, y: Int(buttonSize.height + screenSize.header), width: Int(screenSize.width / 2), height: screenSize.labelHeight)
         startButton.backgroundColor = UIColor.green
-        startButton.addTarget(PlayViewController(), action: #selector(PlayViewController.tappedStart), for: .touchUpInside)
+        startButton.addTarget(CycleViewController(), action: #selector(CycleViewController.start), for: .touchUpInside)
         return startButton
     }()
     
@@ -39,7 +41,7 @@ class PlayView: UIView {
         var buttonSize = sizing.mapViewSize(screenHeight: Int(screenSize.height))
         stopButton.frame = CGRect(x: Int(screenSize.width / 2), y: Int(buttonSize.height + screenSize.header), width: Int(screenSize.width / 2), height: screenSize.labelHeight)
         stopButton.backgroundColor = UIColor.MainColor()
-        //stopButton.addTarget(PlayViewController(), action: #selector(PlayViewController.stop), for: .touchUpInside)
+        stopButton.addTarget(CycleViewController(), action: #selector(CycleViewController.stop), for: .touchUpInside)
         return stopButton
     }()
     
@@ -49,7 +51,7 @@ class PlayView: UIView {
         var buttonSize = sizing.mapViewSize(screenHeight: Int(screenSize.height))
         pauseButton.frame = CGRect(x: 0, y: Int(buttonSize.height + screenSize.header), width: Int(screenSize.width / 2), height: screenSize.labelHeight)
         pauseButton.backgroundColor = UIColor.orange
-        pauseButton.addTarget(PlayViewController(), action: #selector(PlayViewController.pause), for: .touchUpInside)
+        pauseButton.addTarget(CycleViewController(), action: #selector(CycleViewController.pause), for: .touchUpInside)
         return pauseButton
     }()
     
@@ -61,7 +63,7 @@ class PlayView: UIView {
         closeButton.backgroundColor = UIColor.white
         closeButton.setTitle("close", for: .normal)
         closeButton.setTitleColor(UIColor.blue, for: .normal)
-        //closeButton.addTarget(self, action: #selector(close), for: .touchUpInside)
+        closeButton.addTarget(CycleViewController(), action: #selector(CycleViewController.close), for: .touchUpInside)
         return closeButton
     }()
     
@@ -78,9 +80,14 @@ class PlayView: UIView {
         
         super.init(frame: frame)
         
+        self.mapView.delegate = self
+        
         labelBackColorDesign()
         labelTextDesign()
         addComponent()
+        
+        //スタートする前はstopButtonは使用できない
+        self.stopButton.isEnabled = false
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -162,6 +169,30 @@ class PlayView: UIView {
         return pinView
     }
     
+    //進んだ軌跡を生成
+    func updatePolyLine(coordinates: [CLLocationCoordinate2D]) {
+
+        if self.polyLine != nil {
+            self.mapView.remove(self.polyLine!)
+            self.polyLine = nil
+        }
+        
+        self.polyLine = MKPolyline(coordinates: coordinates, count: coordinates.count)
+        
+        if let pl = polyLine {
+            self.mapView.add(pl)
+        }
+    }
+    
+    //軌跡を地図上にレンダリング
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        let polyLineRenderer = MKPolylineRenderer(polyline: overlay as! MKPolyline)
+        polyLineRenderer.strokeColor = UIColor.red
+        polyLineRenderer.alpha = 0.5
+        polyLineRenderer.lineWidth = 5.0
+        return polyLineRenderer
+    }
+    
     //startButtonとpauseButtonを切り替える
     func switchButton() {
         if self.buttonStatus {
@@ -172,6 +203,10 @@ class PlayView: UIView {
             self.addSubview(startButton)
             self.buttonStatus = true
         }
+    }
+    
+    func useEnabledStopButton() {
+        self.stopButton.isEnabled = true
     }
 
 }
