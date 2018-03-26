@@ -8,6 +8,16 @@
 
 import Foundation
 
+protocol DataSource {
+    func save()
+    func sort()
+}
+
+//extension DataSource {
+//    var objects: [CycleDataObject]
+//    func save(object)
+//}
+
 struct CycleData {
     
     let count: Int
