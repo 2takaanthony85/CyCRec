@@ -45,27 +45,3 @@ class CycleDataObject: Object {
     }
 }
 
-protocol DataOperationDelegate {
-    func saveData(object: Object)
-    func sortData(key: String, ascend: Bool) -> [Object]
-}
-
-struct DataOperation: DataOperationDelegate {
-    func saveData(object: Object) {
-        let realm = try! Realm()
-        try! realm.write {
-            realm.add(object)
-        }
-    }
-    
-    func sortData(key: String, ascend: Bool) -> [Object] {
-        let realm = try! Realm()
-        let results = realm.objects(CycleDataObject.self).sorted(byKeyPath: key, ascending: ascend)
-        var dataObjects: [CycleDataObject] = []
-        for result in results {
-            dataObjects.append(result)
-        }
-        return dataObjects
-    }
-    
-}

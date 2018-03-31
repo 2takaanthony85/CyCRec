@@ -147,7 +147,7 @@ class CycleViewController: UIViewController, CLLocationManagerDelegate, AlertDel
             self.dismiss(animated: true, completion: nil)
         case .stop:
             //保存の処理
-            let realmAccess = realmDataAccess()
+            let realmAccess = CycleDataAccess()
             realmAccess.saveData(timer: self.measureTimer, distance: self.measureDistance, speed: self.measureSpeed)
             self.dismiss(animated: true, completion: nil)
         }
