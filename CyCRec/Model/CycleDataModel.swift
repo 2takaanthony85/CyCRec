@@ -8,14 +8,15 @@
 
 import Foundation
 
-struct CycleData {
-    
+struct CycleDataModel {
     let count: Int
     let timeScore: String
     let distance: Double
     let maxSpeed: Double
     let averageSpeed: Double
     let date: () -> String
-    
 }
+
+
+
 

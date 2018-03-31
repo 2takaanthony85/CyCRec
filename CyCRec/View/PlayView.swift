@@ -208,5 +208,20 @@ class PlayView: UIView, MKMapViewDelegate {
     func useEnabledStopButton() {
         self.stopButton.isEnabled = true
     }
+    
+    //瞬間最高時速の更新
+    func updateRealTimeSpeedText(speed: Double) {
+        realtimeSpeedlabel.text = String(format: "%.2f km/h", speed)
+    }
+    
+    //平均時速の更新
+    func updateAverageSpeedText(speed: Double) {
+        averageSpeedLabel.text = String(format: "%.2f km/h", speed)
+    }
+    
+    //距離の更新
+    func updateDistanceText(distance: Double) {
+        distanceLabel.text = String(format: "%.2f km", distance)
+    }
 
 }

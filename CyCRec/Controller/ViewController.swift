@@ -7,18 +7,19 @@
 //
 
 import UIKit
+import RealmSwift
 
-enum SortType {
-    case id
-    case speed
-    case distance
+enum SortType: String {
+    case id = "CycleID"
+    case speed = "averageSpeed"
+    case distance = "distance"
 }
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var tableView: UITableView!
     
-    let data = realmDataAccess()
+    let realmData = CycleDataAccess()
     var type = SortType.id
     var dataObjects: [CycleDataObject] = []
     
@@ -51,13 +52,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func acquisitionData() -> [CycleDataObject] {
         switch type {
         case .id:
-            let results = data.sortData()
+            let results = realmData.sortData(key: type.rawValue, ascend: true)
             return results
         case .distance:
-            let results = data.sortDistance()
+            let results = realmData.sortData(key: type.rawValue, ascend: false)
             return results
         case .speed:
-            let results = data.sortSpeed()
+            let results = realmData.sortData(key: type.rawValue, ascend: false)
             return results
         }
     }
@@ -84,7 +85,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let CycleVC = CycleViewController()
         self.present(CycleVC, animated: true, completion: nil)
     }
-    
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return dataObjects.count

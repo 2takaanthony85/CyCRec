@@ -44,3 +44,4 @@ class CycleDataObject: Object {
         }
     }
 }
+
