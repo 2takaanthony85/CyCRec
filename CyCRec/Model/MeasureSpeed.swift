@@ -48,10 +48,10 @@ struct MeasureSpeed {
     }
     
     //リアルタイムの時速を計測
-    mutating func realTimeSpeed(location: CLLocation) {
+    mutating func realTimeSpeed(location: CLLocation, updateText: (Double) -> Void) {
         self.realTimeSpeed = location.speed * 3.6
         self.speedBox.append(self.realTimeSpeed)
+        updateText(self.realTimeSpeed)
     }
-    
-    
+
 }

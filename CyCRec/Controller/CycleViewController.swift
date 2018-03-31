@@ -72,25 +72,24 @@ class CycleViewController: UIViewController, CLLocationManagerDelegate, AlertDel
         }
         if let newLocation = userInfo["location"] as? CLLocation {
             //2種類の時速を計測
-            measureSpeed.realTimeSpeed(location: newLocation)
+            measureSpeed.realTimeSpeed(location: newLocation, updateText: {(realtimespeed) -> Void in
+                self.playView.updateRealTimeSpeedText(speed: realtimespeed)
+                
+                DispatchQueue.main.async {
+                    self.playView.updateAverageSpeedText(speed: self.measureSpeed.average)
+                }
+            })
             //距離の計測
             measureDistance.locations.append(newLocation)
-            //新しいデータに更新
-            updateDataDisplay(measureSpeed.realTimeSpeed, measureSpeed.average, measureDistance.totalDistance)
+            DispatchQueue.main.async {
+                self.playView.updateDistanceText(distance: self.measureDistance.totalDistance)
+            }
         }
     
         //closure
         locationService.coordinate2DArrayAppend(locations: locationService.locationDataArray) { (newCoordinates) -> Void in
             playView.updatePolyLine(coordinates: newCoordinates)
         }
-    }
-    
-    //DispatchQueue使いたい。。。使える場面なのではないか？
-    //速度、距離のデータの更新
-    func updateDataDisplay(_ speed: Double, _ average: Double, _ distance: Double) {
-        playView.realtimeSpeedlabel.text = String(format: "%.2f km/h", speed)
-        playView.averageSpeedLabel.text = String(format: "%.2f km/h", average)
-        playView.distanceLabel.text = String(format: "%.2f km", distance)
     }
     
     //stop
