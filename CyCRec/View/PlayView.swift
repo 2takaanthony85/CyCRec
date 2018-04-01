@@ -223,5 +223,10 @@ class PlayView: UIView, MKMapViewDelegate {
     func updateDistanceText(distance: Double) {
         distanceLabel.text = String(format: "%.2f km", distance)
     }
+    
+    //時間の更新
+    func updateTimeText(time: String) {
+        timeLabel.text = time
+    }
 
 }

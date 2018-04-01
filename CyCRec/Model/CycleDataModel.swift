@@ -10,7 +10,6 @@ import Foundation
 
 struct CycleDataModel {
     let count: Int
-    let timeScore: String
     let distance: Double
     let maxSpeed: Double
     let averageSpeed: Double

@@ -19,7 +19,6 @@ struct CycleDataAccess: CycleDataSource {
     func saveData(timer: MeasureTimer, distance: MeasureDistance, speed: MeasureSpeed) {
         
         let dataModel = CycleDataModel(count: timer.count,
-                                  timeScore: timer.timeText,
                                   distance: distance.totalDistance,
                                   maxSpeed: speed.maxSpeed,
                                   averageSpeed: speed.average,
@@ -34,7 +33,6 @@ struct CycleDataAccess: CycleDataSource {
         let realm = try! Realm()
         let dataObject = CycleDataObject.create()
         dataObject.count = dataModel.count
-        dataObject.timeScore = dataModel.timeScore
         dataObject.distance = dataModel.distance
         dataObject.maxSpeed = dataModel.maxSpeed
         dataObject.averageSpeed = dataModel.averageSpeed

@@ -79,4 +79,6 @@ class MeasureTimer {
         
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateTime"), object: nil, userInfo: ["time": timeText])
     }
+    
+    
 }

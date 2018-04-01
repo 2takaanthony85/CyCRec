@@ -15,15 +15,16 @@ enum SortType: String {
     case distance = "distance"
 }
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, buttonTapped {
     
     @IBOutlet weak var tableView: UITableView!
-    
+    var sideView: SortSideView!
+    let screenSize = ScreenSize()
     let realmData = CycleDataAccess()
     var type = SortType.id
     var dataObjects: [CycleDataObject] = []
     
-    var bottomPanGesture: UIScreenEdgePanGestureRecognizer!
+    var rightEdgePanGesture: UIScreenEdgePanGestureRecognizer!
     
     override func viewWillAppear(_ animated: Bool) {
         dataObjects = acquisitionData()
@@ -44,9 +45,17 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         tableView.dataSource = self
         tableView.delegate = self
         
-        bottomPanGesture = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(EdgePanGesture(_:)))
-        bottomPanGesture.edges = .right
-        self.view.addGestureRecognizer(bottomPanGesture)
+        sideView = SortSideView(frame: CGRect(x: screenSize.width,
+                                              y: 0,
+                                              width: screenSize.width * 2,
+                                              height: screenSize.height))
+        sideView.delegate = self
+        self.view.addSubview(sideView)
+        
+        rightEdgePanGesture = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(EdgePanGesture(_:)))
+        rightEdgePanGesture.edges = .right
+        self.view.addGestureRecognizer(rightEdgePanGesture)
+        
     }
     
     func acquisitionData() -> [CycleDataObject] {
@@ -84,6 +93,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @objc func play() {
         let CycleVC = CycleViewController()
         self.present(CycleVC, animated: true, completion: nil)
+        
+        
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -98,13 +109,30 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         case .distance:
             cell.textLabel?.text = String(dataObjects[indexPath.row].distance) + " km"
         case .speed:
-            cell.textLabel?.text = String(dataObjects[indexPath.row].averageSpeed) + "km/h"
+            cell.textLabel?.text = String(dataObjects[indexPath.row].averageSpeed) + " km/h"
         }
         return cell
     }
     
     @objc func EdgePanGesture(_ sender: UIScreenEdgePanGestureRecognizer) {
-        print("swipe")
+        sideView.getEdgeGesture(sender: sender, parentVC: self)
+    }
+    
+    func tappedButton(_ sender: UIButton) {
+        switch sender.titleLabel?.text {
+        case buttonType.date.rawValue:
+            type = SortType.id
+        case buttonType.totalDistance.rawValue:
+            type = SortType.distance
+        case buttonType.averageSpeed.rawValue:
+            type = SortType.speed
+        case .none:
+            break
+        case .some(_):
+            break
+        }
+        dataObjects = acquisitionData()
+        tableView.reloadData()
     }
 
     override func didReceiveMemoryWarning() {
