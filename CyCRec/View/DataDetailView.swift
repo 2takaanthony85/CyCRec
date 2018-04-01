@@ -18,9 +18,10 @@ enum dataTitle: String {
     static let dataTitles: [dataTitle] = [.date, .time, .averageSpeed, .maxSpeed, .distance]
 }
 
-class DataDetailView: UIView {
+class DataDetailView: UIView, movement {
     
     let screenSize = ScreenSize()
+    var animationView: ChildView!
     
     init(frame: CGRect, model: CycleDataModel) {
         super.init(frame: frame)
@@ -56,6 +57,21 @@ class DataDetailView: UIView {
             r += 1
         }
         
+        animationView = ChildView(frame: CGRect(x: 0, y: screenSize.height - 100, width: 60, height: 60))
+        animationView.delegate = self
+        self.addSubview(animationView)
+        
+        animationView.animationSelfView()
+    }
+    
+    func rightMove() {
+        UIView.animate(withDuration: 8,
+                       delay: 0.0,
+                       options: .repeat,
+                       animations: {
+                        self.animationView.frame.origin.x = self.screenSize.width
+        },
+                       completion: nil)
     }
     
     required init?(coder aDecoder: NSCoder) {
