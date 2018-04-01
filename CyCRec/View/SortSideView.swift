@@ -95,6 +95,9 @@ class SortSideView: UIView {
         sender.setTranslation(CGPoint.zero, in: self)
     }
     
+    func closeSelfView() {
+        self.frame.origin.x = UIScreen.main.bounds.width
+    }
     /*
     // Only override draw() if you perform custom drawing.
     // An empty implementation adversely affects performance during animation.

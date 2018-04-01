@@ -18,5 +18,9 @@ extension UIColor {
     class func MainColor() -> UIColor {
         return UIColor.rgb(r: 24, g: 135, b: 208, alpha: 1.0)
     }
+    
+    class func tableViewTextColor() -> UIColor {
+        return UIColor.rgb(r: 388, g: 149, b: 0, alpha: 3.0)
+    }
 }
 

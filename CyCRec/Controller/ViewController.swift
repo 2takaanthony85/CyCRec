@@ -20,14 +20,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBOutlet weak var tableView: UITableView!
     var sideView: SortSideView!
     let screenSize = ScreenSize()
-    let realmData = CycleDataAccess()
+    let dataAccess = CycleDataAccess()
     var type = SortType.id
-    var dataObjects: [CycleDataObject] = []
-    
+    var dataModels: [CycleDataModel] = []
     var rightEdgePanGesture: UIScreenEdgePanGestureRecognizer!
     
     override func viewWillAppear(_ animated: Bool) {
-        dataObjects = acquisitionData()
+        dataModels = acquisitionData()
         tableView.reloadData()
         super.viewWillAppear(true)
     }
@@ -55,19 +54,19 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         rightEdgePanGesture = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(EdgePanGesture(_:)))
         rightEdgePanGesture.edges = .right
         self.view.addGestureRecognizer(rightEdgePanGesture)
-        
     }
     
-    func acquisitionData() -> [CycleDataObject] {
+    //ソートする
+    func acquisitionData() -> [CycleDataModel] {
         switch type {
         case .id:
-            let results = realmData.sortData(key: type.rawValue, ascend: true)
+            let results = dataAccess.sortData(key: type.rawValue, ascend: true)
             return results
         case .distance:
-            let results = realmData.sortData(key: type.rawValue, ascend: false)
+            let results = dataAccess.sortData(key: type.rawValue, ascend: false)
             return results
         case .speed:
-            let results = realmData.sortData(key: type.rawValue, ascend: false)
+            let results = dataAccess.sortData(key: type.rawValue, ascend: false)
             return results
         }
     }
@@ -75,17 +74,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     //ナビゲーションボタンの生成
     func createButton() -> UIButton {
         let button = UIButton(type: .system)
-        
         button.contentHorizontalAlignment = .center
         button.contentVerticalAlignment = .center
-        
         button.titleLabel?.font = UIFont(name: "FontAwesome5FreeSolid", size: 30)
         button.titleLabel?.text = "bicycle"
-        
         button.setTitle(button.titleLabel?.text, for: .normal)
-        
         button.addTarget(self, action: #selector(play), for: .touchUpInside)
-        
         return button
     }
     
@@ -93,31 +87,43 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @objc func play() {
         let CycleVC = CycleViewController()
         self.present(CycleVC, animated: true, completion: nil)
-        
-        
+        //sideViewは閉じる
+        sideView.closeSelfView()
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return dataObjects.count
+        return dataModels.count
     }
     
+    //typeによってtableViewに表示する要素を変更する
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 17)
+        cell.textLabel?.textColor = UIColor.tableViewTextColor()
         switch type {
         case .id:
-            cell.textLabel?.text = dataObjects[indexPath.row].date + " の走行"
+            cell.textLabel?.text = dataModels[indexPath.row].date() + " 走行"
         case .distance:
-            cell.textLabel?.text = String(dataObjects[indexPath.row].distance) + " km"
+            cell.textLabel?.text = "Mileage :    " + String(dataModels[indexPath.row].distance) + " km"
         case .speed:
-            cell.textLabel?.text = String(dataObjects[indexPath.row].averageSpeed) + " km/h"
+            cell.textLabel?.text = "The average speed :    " + String(dataModels[indexPath.row].averageSpeed) + " km/h"
         }
         return cell
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        sideView.frame.origin.x = UIScreen.main.bounds.width * 2
+        let DetailVC = DataDetailViewController()
+        DetailVC.detailModel = dataModels[indexPath.row]
+        self.navigationController?.pushViewController(DetailVC, animated: true)
+    }
+    
+    //sideViewを表示する
     @objc func EdgePanGesture(_ sender: UIScreenEdgePanGestureRecognizer) {
         sideView.getEdgeGesture(sender: sender, parentVC: self)
     }
     
+    //sideViewのボタンタップでソートの要素を変更する
     func tappedButton(_ sender: UIButton) {
         switch sender.titleLabel?.text {
         case buttonType.date.rawValue:
@@ -131,7 +137,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         case .some(_):
             break
         }
-        dataObjects = acquisitionData()
+        dataModels = acquisitionData()
         tableView.reloadData()
     }
 
@@ -139,7 +145,5 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-
 }
 

@@ -15,6 +15,7 @@ class CycleDataObject: Object {
     @objc dynamic var CycleID: Int = 0
     //time
     @objc dynamic var count: Int = 0
+    @objc dynamic var timeScore: String = ""
     //走行距離
     @objc dynamic var distance: Double = 0
     //最高時速

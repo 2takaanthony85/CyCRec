@@ -30,6 +30,9 @@ class PlayView: UIView, MKMapViewDelegate {
         let startButton = UIButton()
         var buttonSize = sizing.mapViewSize(screenHeight: Int(screenSize.height))
         startButton.frame = CGRect(x: 0, y: Int(buttonSize.height + screenSize.header), width: Int(screenSize.width / 2), height: screenSize.labelHeight)
+        startButton.titleLabel?.font = UIFont(name: "FontAwesome5FreeSolid", size: 40)
+        startButton.titleLabel?.text = "play-circle"
+        startButton.setTitle(startButton.titleLabel?.text, for: .normal)
         startButton.backgroundColor = UIColor.green
         startButton.addTarget(CycleViewController(), action: #selector(CycleViewController.start), for: .touchUpInside)
         return startButton
@@ -40,6 +43,9 @@ class PlayView: UIView, MKMapViewDelegate {
         let stopButton = UIButton()
         var buttonSize = sizing.mapViewSize(screenHeight: Int(screenSize.height))
         stopButton.frame = CGRect(x: Int(screenSize.width / 2), y: Int(buttonSize.height + screenSize.header), width: Int(screenSize.width / 2), height: screenSize.labelHeight)
+        stopButton.titleLabel?.font = UIFont(name: "FontAwesome5FreeSolid", size: 40)
+        stopButton.titleLabel?.text = "stop-circle"
+        stopButton.setTitle(stopButton.titleLabel?.text, for: .normal)
         stopButton.backgroundColor = UIColor.MainColor()
         stopButton.addTarget(CycleViewController(), action: #selector(CycleViewController.stop), for: .touchUpInside)
         return stopButton
@@ -50,6 +56,9 @@ class PlayView: UIView, MKMapViewDelegate {
         let pauseButton = UIButton()
         var buttonSize = sizing.mapViewSize(screenHeight: Int(screenSize.height))
         pauseButton.frame = CGRect(x: 0, y: Int(buttonSize.height + screenSize.header), width: Int(screenSize.width / 2), height: screenSize.labelHeight)
+        pauseButton.titleLabel?.font = UIFont(name: "FontAwesome5FreeSolid", size: 40)
+        pauseButton.titleLabel?.text = "pause-circle"
+        pauseButton.setTitle(pauseButton.titleLabel?.text, for: .normal)
         pauseButton.backgroundColor = UIColor.orange
         pauseButton.addTarget(CycleViewController(), action: #selector(CycleViewController.pause), for: .touchUpInside)
         return pauseButton
@@ -60,9 +69,11 @@ class PlayView: UIView, MKMapViewDelegate {
         let closeButton = UIButton()
         var buttonSize = sizing.mapViewSize(screenHeight: Int(screenSize.height))
         closeButton.frame = CGRect(x: 0, y: Int(buttonSize.height + screenSize.header + screenSize.labelHeight), width: Int(screenSize.width), height: screenSize.labelHeight)
-        closeButton.backgroundColor = UIColor.white
-        closeButton.setTitle("close", for: .normal)
+        closeButton.titleLabel?.font = UIFont(name: "FontAwesome5FreeSolid", size: 40)
+        closeButton.titleLabel?.text = "window-close"
+        closeButton.setTitle(closeButton.titleLabel?.text, for: .normal)
         closeButton.setTitleColor(UIColor.blue, for: .normal)
+        closeButton.backgroundColor = UIColor.white
         closeButton.addTarget(CycleViewController(), action: #selector(CycleViewController.close), for: .touchUpInside)
         return closeButton
     }()
@@ -102,16 +113,20 @@ class PlayView: UIView, MKMapViewDelegate {
     }
     
     private func labelTextDesign() {
-        timeLabel.text = "00:00:00"
+        timeLabel.text = "00:00:00    "
+        timeLabel.font = UIFont.boldSystemFont(ofSize: 17)
         timeLabel.textAlignment = .right
         
-        distanceLabel.text = "0.00 km"
+        distanceLabel.text = "0.00 km    "
+        distanceLabel.font = UIFont.boldSystemFont(ofSize: 17)
         distanceLabel.textAlignment = .right
         
-        realtimeSpeedlabel.text = "000.00 km/h"
+        realtimeSpeedlabel.text = "000.00 km/h    "
+        realtimeSpeedlabel.font = UIFont.boldSystemFont(ofSize: 17)
         realtimeSpeedlabel.textAlignment = .right
         
-        averageSpeedLabel.text = "000.00 km/h"
+        averageSpeedLabel.text = "000.00 km/h    "
+        averageSpeedLabel.font = UIFont.boldSystemFont(ofSize: 17)
         averageSpeedLabel.textAlignment = .right
     }
     
