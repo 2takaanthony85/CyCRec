@@ -61,7 +61,7 @@ class CycleViewController: UIViewController, CLLocationManagerDelegate, AlertDel
             return
         }
         if let timeText = userInfo["time"] as? String {
-            playView.timeLabel.text = timeText
+            playView.updateTimeText(time: timeText)
         }
     }
     

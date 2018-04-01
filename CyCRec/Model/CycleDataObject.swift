@@ -13,9 +13,8 @@ class CycleDataObject: Object {
     static let realm = try! Realm()
     
     @objc dynamic var CycleID: Int = 0
-    //タイマーで使用していたcount
+    //time
     @objc dynamic var count: Int = 0
-    //00:00:00
     @objc dynamic var timeScore: String = ""
     //走行距離
     @objc dynamic var distance: Double = 0
